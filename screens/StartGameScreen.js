@@ -1,56 +1,63 @@
-import { useState } from "react";
-import { TextInput, View, StyleSheet, Alert, Text } from "react-native";
-import Title from "../components/ui/Title";
+import { useState } from 'react';
+import { TextInput, View, StyleSheet, Alert } from 'react-native';
 
-import PrimaryButton from "../components/ui/PrimaryButton";
+import PrimaryButton from '../components/ui/PrimaryButton';
+import Title from '../components/ui/Title';
+import Colors from '../components/constants/colors';
+import Card from '../components/ui/Card';
+import InstructionText from '../components/ui/InstructionText';
 
-function StartGameScreen({ selectedNumber }) {
-  const [enteredNumber, setEnteredNumber] = useState("");
+function StartGameScreen({ onPickNumber }) {
+  const [enteredNumber, setEnteredNumber] = useState('');
 
-  function inputHandler(enteredText) {
+  function numberInputHandler(enteredText) {
     setEnteredNumber(enteredText);
   }
 
-  function resetHandler() {
-    setEnteredNumber("");
+  function resetInputHandler() {
+    setEnteredNumber('');
   }
 
   function confirmInputHandler() {
-    const num = parseInt(enteredNumber);
-    if (isNaN(num) || num <= 0 || num > 99) {
+    const chosenNumber = parseInt(enteredNumber);
+
+    if (isNaN(chosenNumber) || chosenNumber <= 0 || chosenNumber > 99) {
       Alert.alert(
-        "Invalid Input",
-        "Number must be between 1 and 99.",
-        [{ text: "Okay", style: "destructive", onPress: resetHandler }]
+        'Invalid number!',
+        'Number has to be a number between 1 and 99.',
+        [{ text: 'Okay', style: 'destructive', onPress: resetInputHandler }]
       );
       return;
     }
-    selectedNumber(num);
+
+    onPickNumber(chosenNumber);
   }
 
   return (
-    <View style={styles.screen}>
+    <View style={styles.rootContainer}>
       <Title>Guessing Game</Title>
-    <View style={styles.inputContainer}>
-      <Text style={styles.title}>Enter a Number</Text>
-      <TextInput
-        style={styles.numberInput}
-        maxLength={3}
-        keyboardType="number-pad"
-        autoCapitalize="none"
-        autoCorrect={false}
-        onChangeText={inputHandler}
-        value={enteredNumber}
-      />
-      <View style={styles.buttons}>
-        <View style={styles.buttonContainer}>
-          <PrimaryButton onPress={resetHandler}>Reset</PrimaryButton>
+      <Card>
+        <InstructionText>
+          Enter a Number
+        </InstructionText>
+        <TextInput
+          style={styles.numberInput}
+          maxLength={2}
+          keyboardType="number-pad"
+          autoCapitalize="none"
+          autoCorrect={false}
+          onChangeText={numberInputHandler}
+          value={enteredNumber}
+        />
+        <View style={styles.buttonsContainer}>
+          <View style={styles.buttonContainer}>
+            <PrimaryButton onPress={resetInputHandler}>Reset</PrimaryButton>
+          </View>
+          <View style={styles.buttonContainer}>
+            <PrimaryButton onPress={confirmInputHandler}>Confirm</PrimaryButton>
+          </View>
         </View>
-        <View style={styles.buttonContainer}>
-          <PrimaryButton onPress={confirmInputHandler}>Confirm</PrimaryButton>
-        </View>
-      </View>
-    </View>
+      </Card>
     </View>
   );
 }
@@ -58,49 +65,26 @@ function StartGameScreen({ selectedNumber }) {
 export default StartGameScreen;
 
 const styles = StyleSheet.create({
-  screen:{
+  rootContainer: {
     flex: 1,
-    marginTop: 90,
+    marginTop: 100,
+    alignItems: 'center',
   },
-  inputContainer: {
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 10,
-    marginHorizontal: 20,
-    padding: 5,
-    backgroundColor: "#4e0329",
-    borderRadius: 5,
-    elevation: 4,
-    shadowColor: "blue",
-    shadowOffset: { width: 0, height: 4 },
-    shadowRadius: 7,
-    shadowOpacity: 0.5,
-  },
-  title:{
-    margin: 2,
-    padding: 10,
-    fontSize: 26,
-    color: 'yellow'
-  },
-
   numberInput: {
-    height: 40,
-    width: 100,
-    textAlign: "center",
-    fontSize: 18,
-    borderBottomColor: "yellow",
-    borderBottomWidth: 1,
+    height: 50,
+    width: 50,
+    fontSize: 25,
+    borderBottomColor: Colors.accent500,
+    borderBottomWidth: 2,
+    color: Colors.accent500,
     marginVertical: 8,
-    paddingHorizontal: 10,
-    color: "yellow",
-    fontWeight: "bold",
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
-  buttons: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+  buttonsContainer: {
+    flexDirection: 'row',
   },
   buttonContainer: {
     flex: 1,
-    marginHorizontal: 10,
   },
 });

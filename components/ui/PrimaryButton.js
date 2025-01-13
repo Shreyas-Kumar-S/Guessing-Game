@@ -20,6 +20,7 @@ const styles = StyleSheet.create({
         borderRadius:20,
         overflow: 'hidden',
         marginBottom:10,
+        padding: 10
     },
     buttonContainer: {
         backgroundColor: '#72063c',
